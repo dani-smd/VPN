@@ -1,0 +1,106 @@
+{
+  "log": {
+    "access": "none",
+    "dnsLog": false,
+    "error": "./error.log",
+    "loglevel": "warning"
+  },
+  "api": {
+    "tag": "api",
+    "services": [
+      "HandlerService",
+      "LoggerService",
+      "StatsService"
+    ]
+  },
+  "inbounds": [
+    {
+      "tag": "api",
+      "listen": "127.0.0.1",
+      "port": 62789,
+      "protocol": "dokodemo-door",
+      "settings": {
+        "address": "127.0.0.1"
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "direct",
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "UseIP"
+      }
+    },
+    {
+      "tag": "blocked",
+      "protocol": "blackhole",
+      "settings": {}
+    },
+    {
+      "tag": "WARP",
+      "protocol": "socks",
+      "settings": {
+        "servers": [
+          {
+            "address": "127.0.0.1",
+            "port": 40000
+          }
+        ]
+      }
+    }
+  ],
+  "policy": {
+    "levels": {
+      "0": {
+        "statsUserDownlink": true,
+        "statsUserUplink": true
+      }
+    },
+    "system": {
+      "statsInboundDownlink": true,
+      "statsInboundUplink": true,
+      "statsOutboundDownlink": true,
+      "statsOutboundUplink": true
+    }
+  },
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [
+      {
+        "type": "field",
+        "outboundTag": "WARP",
+        "network": "tcp",
+        "domain": [
+          "domain:.ir",
+          "iplocation.net",
+          "ipinfo.io",
+          "geosite:google",
+          "geosite:category-public-tracker",
+          "geosite:openai",
+          "geosite:spotify",
+          "geosite:stripe",
+          "geosite:hetzner",
+          "geosite:docker",
+          "geosite:category-container",
+          "geosite:category-dev",
+          "geosite:category-ecommerce",
+          "geosite:category-cryptocurrency",
+          "geosite:category-scholar-!cn",
+          "geosite:category-games",
+          "geosite:netflix",
+          "geosite:disney",
+          "geosite:facebook"
+        ]
+      },
+      {
+        "type": "field",
+        "ip": [
+          "geoip:ir"
+        ],
+        "outboundTag": "WARP"
+      }
+    ]
+  },
+  "stats": {}
+}
