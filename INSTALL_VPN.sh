@@ -34,4 +34,4 @@ echo "After that go to Xray config then go to Advanced tab then Copy script belo
 
 sleep 2
 
-cat Xray_Configuration.json | jq.
+cat Xray_Configuration.json | jq .
